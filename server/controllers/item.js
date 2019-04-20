@@ -7,11 +7,10 @@ class ControllerItem {
       name: input.name,
       tags: [],
       price: input.price,
+      stock: input.stock,
       description: input.description,
       featuredImg: input.featuredImg,
     }
-    console.log('newItem')
-    console.log(newItem)
     Item.create(newItem)
       .then(data => {
         res.status(201).json({ data })

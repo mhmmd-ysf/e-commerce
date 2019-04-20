@@ -15,9 +15,14 @@ describe('Item routes (success):', function () {
       .end((err, res) => {
         let result = res.body
         // console.log('res=====================================')
-        // console.log(res.body)
+        // console.log(result)
         // console.log('res=====================================')
         result.should.be.a('array')
+        result.forEach(item => {
+          item.should.have.property('name')
+          item.should.have.property('email')
+          item.should.have.property('password')
+        })
         done()
       })
   })
@@ -25,9 +30,15 @@ describe('Item routes (success):', function () {
   it('GET /users/:id => Should return an object of user', function (done) {
     chai
       .request(app)
-      .get('/users/5cb4a3b2c62f0f3c88f07e20')
+      .get('/users/5cb4b49a1f1268172c80dac2')
       .end((err, res) => {
+        // console.log('res=====================================')
+        // console.log(res.body)
+        // console.log('res=====================================')
         res.body.should.be.a('object')
+        res.body.should.have.property('name')
+        res.body.should.have.property('email')
+        res.body.should.have.property('password')
         done()
       })
   })
@@ -45,6 +56,9 @@ describe('Item routes (success):', function () {
       .send(user)
       .end((err, res) => {
         res.body.should.be.a('object')
+        res.body.should.have.property('name')
+        res.body.should.have.property('email')
+        res.body.should.have.property('password')
         done()
       })
   })
@@ -91,10 +105,18 @@ describe('Item routes (success):', function () {
       .get('/items')
       .end((err, res) => {
         let result = res.body
-        console.log('res=====================================')
-        console.log(result)
-        console.log('res=====================================')
+        // console.log('res=====================================')
+        // console.log(result)
+        // console.log('res=====================================')
         result.should.be.a('array')
+        result.forEach(item => {
+          item.should.have.property('name')
+          item.should.have.property('price')
+          item.should.have.property('description')
+          item.should.have.property('featuredImg')
+          item.should.have.property('tags')
+          item.should.have.property('stock')
+        })
         done()
       })
   })
@@ -102,9 +124,19 @@ describe('Item routes (success):', function () {
   it('GET /items/:id => Should return an object of item', function (done) {
     chai
       .request(app)
-      .get('/items/5cb4bb9abd8a3a3528318286')
+      .get('/items/5cb9c981ee7070650cd3ddd0')
       .end((err, res) => {
-        res.should.be.a('object')
+        let result = res.body
+        // console.log('res=====================================')
+        // console.log(result)
+        // console.log('res=====================================')
+        result.should.be.a('object')
+        result.should.have.property('name')
+        result.should.have.property('price')
+        result.should.have.property('description')
+        result.should.have.property('featuredImg')
+        result.should.have.property('tags')
+        result.should.have.property('stock')
         done()
       })
   })
@@ -113,23 +145,35 @@ describe('Item routes (success):', function () {
     let newItem = {
       name: 'input.name112',
       price: 200,
+      stock: 100,
       description: 'input.description112',
       featuredImg: 'input.featuredImg112',
+      tags: [
+        'makan',
+        'minum'
+      ]
     }
     chai
       .request(app)
       .post('/items')
       .send(newItem)
       .end((err, res) => {
-        console.log('res=====================================')
-        console.log(res.body)
-        console.log('res=====================================')
-        res.body.should.be.a('object')
+        let input = res.body.data
+        // console.log('res=====================================')
+        // console.log(input)
+        // console.log('res=====================================')
+        input.should.be.a('object')
+        input.should.have.property('name')
+        input.should.have.property('price')
+        input.should.have.property('description')
+        input.should.have.property('featuredImg')
+        input.should.have.property('tags')
+        input.should.have.property('stock')
         done()
       })
   })
   //? ================================ PUT items done ================================
-  it('PUT /items/:id => Should return an object of updated item', function (done) {
+  it.only('PUT /items/:id => Should return an object of updated item', function (done) {
     let newItem2 = {
       name: 'input.name3',
       // tags: 'input.tags3',
@@ -139,27 +183,34 @@ describe('Item routes (success):', function () {
     }
       chai
       .request(app)
-        .put('/items/5cb4bb9abd8a3a3528318286')
+        .put('/items/5cb9c981ee7070650cd3ddd0')
         .send(newItem2)
         .end((err, res) => {
           //! hasil update => { n: 1, nModified: 1, ok: 1 }
-          console.log('res=====================================')
-          console.log(res.body)
-          console.log('res=====================================')
-          res.body.should.be.a('object')
+          let input = res.body
+          // console.log('res=====================================')
+          // console.log(input)
+          // console.log('res=====================================')
+          input.should.be.a('object')
+          input.should.have.property('n')
+          input.should.have.property('nModified', 1)
+          input.should.have.property('ok')
           done()
         })
     })
   //? ================================ DELETE items done ================================
-  it.only('DELETE /items/:id => should remove an item and return status code 204', function (done) {
+  it('DELETE /items/:id => should remove an item and return status code 204', function (done) {
     chai
       .request(app)
-      .delete('/items/5cb4bb9abd8a3a3528318286')
+      .delete('/items/5cb9c958a662c6610085504e')
       .end((err, res) => {
-        // console.log('res=====================================')
-        // console.log(res)
-        // console.log('res=====================================')
-        res.body.should.be.a('object')
+        let input = res.body
+        console.log('res=====================================')
+        console.log(input)
+        console.log('res=====================================')
+        input.should.be.a('object')
+        input.should.have.property('message')
+        input.should.have.property('id')
         done()
       })
   })

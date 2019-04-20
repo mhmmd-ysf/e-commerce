@@ -1,10 +1,16 @@
 const route = require('express').Router()
 const ControllerUser = require('../controllers/user')
 const ControllerItem = require('../controllers/item')
+const authenticate = require('../middlewares/authenticate')
 
 route.get('/', (req, res) => {res.status(200).json({message: 'Home'})})
-// route.post('/login', ControllerUser.login)
+route.post('/login', ControllerUser.login)
 route.post('/register', ControllerUser.create)
+route.put('/addToCart', authenticate, ControllerUser.addToCart)
+route.put('/removeFromCart', authenticate, ControllerUser.removeFromCart)
+route.put('/removeAll', authenticate, ControllerUser.removeAll)
+
+
 route.get('/users', ControllerUser.findAll)
 route.get('/users/:id', ControllerUser.findOne)
 route.put('/users/:id', ControllerUser.update)

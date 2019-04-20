@@ -1,56 +1,46 @@
 <template>
   <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <navbar/>
-    <div>
-      <div id="sidebar">
-        <div class="sidenav">
-          <a href="#about" class>About</a>
-          <a href="#services">Services</a>
-          <a href="#clients">Clients</a>
-          <a href="#contact">Contact</a>
-        </div>
-      </div>
-      
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <div style="background-color: aqua;">tes</div>
-      <br><br><br><br><br><br><br><br><br><br><br>
-      <br><br><br><br><br><br><br><br><br><br><br>
-      <br><br><br><br><br><br><br><br><br><br><br>
-      <br><br><br><br><br><br><br><br><br><br><br>
-      <br><br><br><br><br><br><br>
-    </div>
+    <navbar :carts="carts"/>
+    <router-view @update-cart="updateCart" :carts="carts"></router-view>
   </div>
 </template>
 
 <script>
-import navbar from "./components/navbar.vue";
-// import sidebar from "./components/sidebar.vue";
+import axios from 'axios';
+import navbar from './components/navbar.vue';
+import cards from './components/cards.vue';
+
+const url = 'http://localhost:3000';
 
 export default {
-  name: "app",
+  name: 'app',
   components: {
-    // HelloWorld
-    navbar
-    // sidebar
+    navbar,
+    cards,
+  },
+  data() {
+    return {
+      items: [],
+      carts: [],
+    };
+  },
+  methods: {
+    updateCart(input) {
+      this.carts = input
+      console.log({input, dari: 'app'})
+    }
+  },
+  created() {
+    // console.log('created jalan')
+    this.carts = []
+    if(window.localStorage.id) {
+      axios.get(`${url}/users/${window.localStorage.id}`)
+        .then(({ data }) => {
+          this.carts = data.carts;
+          // console.log({cartList: data.carts});
+        })
+        .catch((err) => {console.log(err)});
+    }
   }
 };
 </script>
@@ -62,29 +52,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-.sidenav {
-  width: 130px;
-  position: fixed;
-  z-index: 1;
-  margin-top: 10px;
-  left: 10px;
-  background: #eee;
-  overflow-x: hidden;
-  padding: 8px;
-  border-radius: 5px;
-}
-
-.sidenav a {
-  padding: 8px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #2196f3;
-  display: block;
-}
-
-.sidenav a:hover {
-  color: #064579;
 }
 
 .main {

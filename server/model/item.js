@@ -7,14 +7,7 @@ let ItemSchema = new mongoose.Schema({
   price: Number,
   description: String,
   featuredImg: String,
-  // associateIdSingular: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User'
-  // },
-  // associateIdPlural: [{
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User'
-  // }]
+  stock: Number,
 })
 
 let Item = mongoose.model('Item', ItemSchema)
