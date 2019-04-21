@@ -4,11 +4,12 @@
     <div class="card-body">
       <h5 class="card-title">{{item.name}}</h5>
       <p class="card-text">{{item.description}}</p>
-      <!-- <a href="#" class="btn btn-primary">Details</a> -->
-      <button class="btn btn-primary" data-toggle="modal" data-target="#modalDetails"
-      @click="viewItem(item._id)">Details</button>
-      <button class="btn btn-danger" @click.prevent="removeFromCart(item._id)">Remove from Cart</button>
-      <button class="btn btn-danger" @click.prevent="removeAll(item._id)">Remove all {{item.name}}</button>
+      <router-link :to="{name: 'detailed', params: {id: item._id}}">
+        <button class="btn btn-primary">Details</button></router-link>
+      <button class="btn btn-danger" @click.prevent="removeFromCart(item._id)"
+      >Remove from Cart</button>
+      <button class="btn btn-danger" @click.prevent="removeAll(item._id)"
+      >Remove all {{item.name}}</button>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="modalDetails" tabindex="-1"
@@ -41,8 +42,9 @@
 
 <script>
 import axios from 'axios';
+import swal from 'sweetalert';
 
-const url = 'http://localhost:3000'
+const url = 'http://localhost:3000';
 
 export default {
   name: 'cards',
@@ -55,29 +57,40 @@ export default {
     },
     removeFromCart(id) {
       // console.log({id, msg: 'removeFromCart', userId: window.localStorage.id});
-      axios.defaults.headers.common['id_token'] = window.localStorage.token
-      axios.put(`${url}/removeFromCart`, {
-        itemId: id
-      })
-        .then(({ data }) => {
-          this.$emit('update-cart', data)
+      swal('Item Deleted')
+        .then((click) => {
+          axios.defaults.headers.common.id_token = window.localStorage.token;
+          return axios.put(`${url}/removeFromCart`, {
+            itemId: id,
+          });
         })
-        .catch((err) => {console.log(err)})
+        .then(({ data }) => {
+          this.$emit('update-cart', data);
+        })
+        .catch((err) => { console.log(err); });
     },
     removeAll(id) {
       // console.log({id, msg: 'removeAll', userId: window.localStorage.id});
-      axios.defaults.headers.common['id_token'] = window.localStorage.token
-      axios.put(`${url}/removeAll`, {
-        itemId: id
-      })
-        .then(({ data }) => {
-          this.$emit('update-cart', data)
+      swal('All selected items deleted')
+        .then((click) => {
+          axios.defaults.headers.common.id_token = window.localStorage.token;
+          return axios.put(`${url}/removeAll`, {
+            itemId: id,
+          });
         })
-        .catch((err) => {console.log(err)})
-    }
+        .then(({ data }) => {
+          this.$emit('update-cart', data);
+        })
+        .catch((err) => { console.log(err); });
+    },
   },
 };
 </script>
 
 <style>
+.card-body button {
+  margin: 10px;
+  display: flex;
+
+}
 </style>

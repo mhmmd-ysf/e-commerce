@@ -9,21 +9,29 @@
           <a href="#contact">Contact</a>
         </div>
       </div>
-      <div id="itemDiv">
-        <carts v-for="(item, index) in carts" :key="index" :item="item"></carts>
+      <div id="middleDiv">
+        <div v-if="carts.length > 0" id="itemDiv">
+          <carts v-for="(item, index) in carts"
+          :key="index" :item="item" @update-cart="updateCart"></carts>
+        </div>
+        <div id="emptyDiv" v-if="carts.length < 1">
+          <h1>Kosong!</h1>
+        </div>
+      </div>
+      <div id="details">
+        <router-view :carts="carts"></router-view>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import cards from '../components/cards.vue';
 import carts from '../components/carts.vue';
 
 export default {
   name: 'cart',
   components: {
-    cards,
+    // cards,
     carts,
   },
   props: [
@@ -44,13 +52,27 @@ export default {
     //   return acc
     // }, {})
   },
-}
+  methods: {
+    updateCart(data) {
+      this.$emit('update-cart', data);
+    },
+  },
+};
 </script>
 
 <style>
-#itemDiv {
-  /* background-color: aqua; */
+#details {
+  width: 400px;
+  background-color: aqua;
+}
+
+#middleDiv {
   width: 100%;
+}
+
+#itemDiv {
+  text-align: center;
+  /* background-color: aqua; */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

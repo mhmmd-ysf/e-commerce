@@ -40,8 +40,9 @@
 
 <script>
 import axios from 'axios';
+import swal from 'sweetalert';
 
-const url = 'http://localhost:3000'
+const url = 'http://localhost:3000';
 
 export default {
   name: 'cards',
@@ -54,17 +55,20 @@ export default {
     },
     addToCart(id) {
       // console.log({id, msg: 'addToCart', userId: window.localStorage.id});
-      axios.defaults.headers.common['id_token'] = window.localStorage.token
+      axios.defaults.headers.common.id_token = window.localStorage.token;
       axios.put(`${url}/addToCart`, {
-        itemId: id
+        itemId: id,
       })
         .then(({ data }) => {
           // ! mestinya ada emit buat update jumlah cart
           // console.log({dataBalikan: data})
-          this.$emit('update-cart', data)
+          this.$emit('update-cart', data);
         })
-        .catch((err) => {console.log(err)})
-    }
+        .catch((err) => {
+          swal(`Error Code: ${err.response.status}`, `${err.response.data.error}`, 'error');
+          console.log({ error: err.response.data.error });
+        });
+    },
   },
 };
 </script>

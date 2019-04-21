@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Cart from './views/Cart.vue';
+import detailed from './views/details.vue';
 
 Vue.use(Router);
 
@@ -28,6 +29,13 @@ export default new Router({
       path: '/myCart',
       name: 'myCart',
       component: Cart,
+      children: [
+        {
+          path: ':id',
+          name: 'detailed',
+          component: detailed,
+        },
+      ],
     },
     {
       path: '/about',

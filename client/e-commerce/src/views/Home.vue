@@ -3,14 +3,15 @@
     <div id="containerHome">
       <div id="sidebar">
         <div class="sidenav">
-          <a href="#about" class>About</a>
-          <a href="#services">Services</a>
-          <a href="#clients">Clients</a>
-          <a href="#contact">Contact</a>
+          <a href="#" @click.prevent="unavailable">About</a>
+          <a href="#" @click.prevent="unavailable">Services</a>
+          <a href="#" @click.prevent="unavailable">Clients</a>
+          <a href="#" @click.prevent="unavailable">Contact</a>
         </div>
       </div>
       <div id="itemDiv">
-        <cards v-for="(item, index) in items" :key="index" :item="item" @update-cart="updateCart"></cards>
+        <cards v-for="(item, index) in items" :key="index"
+        :item="item" @update-cart="updateCart"></cards>
       </div>
     </div>
   </div>
@@ -19,6 +20,7 @@
 <script>
 // @ is an alias to /src
 import axios from 'axios';
+import swal from 'sweetalert';
 import cards from '../components/cards.vue';
 
 const url = 'http://localhost:3000';
@@ -36,14 +38,15 @@ export default {
   },
   methods: {
     updateCart(data) {
-      // console.log({data, dari: 'Home'})
-      this.$emit('update-cart', data)
-    }
+      this.$emit('update-cart', data);
+    },
+    unavailable() {
+      swal('Item unavailable 😿');
+    },
   },
   created() {
     axios.get(`${url}/items`)
       .then(({ data }) => {
-        // console.log({ data, location: 'home component' });
         this.items = data;
         // this.$emit('send-item', this.items)
       })

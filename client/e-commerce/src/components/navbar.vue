@@ -26,9 +26,6 @@
             <router-link to="/" class="nav-link">Lapaktiv8</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/" class="nav-link">Home</router-link>
-          </li>
-          <li class="nav-item">
             <router-link to="/items" class="nav-link">Items</router-link>
           </li>
           <li class="nav-item">
@@ -37,21 +34,27 @@
         </ul>
 
         <div class="input-group col-sm-4">
-          <button class="btn btn-dark" style="margin-right: 20px;" @click.prevent="cartList">
-          <router-link to="/myCart">My Cart ({{carts.length}})</router-link></button>
+          <router-link to="/myCart" @click.prevent="cartList">
+          <button class="btn btn-dark" style="margin-right: 20px;">
+          My Cart ({{carts.length}})
+          </button>
+          </router-link>
           <input
             type="text"
-            class="form-control"
             placeholder="Search product here"
             aria-label="Search product here"
             aria-describedby="button-addon2"
+            style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;"
+            class="form-control"
           >
           <div class="input-group-append">
             <button class="btn btn-outline-dark" type="button" id="button-addon2">Search</button>
           </div>
         </div>
-        <span class="navbar-text" style="margin-right: 10px;">Username</span>
-        <button class="btn btn-dark" data-toggle="modal" data-target="#modalLogin">Login</button>
+        <span class="navbar-text" style="margin-right: 10px;" v-if="isLoggedIn">{{userEmail}}</span>
+        <button class="btn btn-dark" data-toggle="modal"
+        data-target="#modalLogin" v-if="!isLoggedIn">Login</button>
+        <button class="btn btn-dark" v-if="isLoggedIn" @click="logout">Logout</button>
       </div>
     </nav>
     <!-- Modal -->
@@ -133,7 +136,9 @@ const url = 'http://localhost:3000';
 export default {
   name: 'navbar',
   props: [
-    'carts'
+    'carts',
+    'isLoggedIn',
+    'userEmail',
   ],
   data() {
     return {
@@ -147,7 +152,7 @@ export default {
       console.log({
         email: this.email,
         password: this.password,
-        state: 'login'
+        state: 'login',
       });
       axios.post(`${url}/login`, {
         email: this.email,
@@ -159,25 +164,56 @@ export default {
           window.localStorage.id = data.id;
           window.localStorage.name = data.name;
           window.localStorage.email = data.email;
-          this.email = ''
-          this.password = ''
+          this.$emit('logged-in', {
+            isLoggedIn: true,
+            userEmail: this.email,
+            userName: data.name,
+          });
+          this.email = '';
+          this.password = '';
           $('#modalLogin').modal('hide');
         })
         .catch((err) => {
           console.log(err);
-        })
+        });
+    },
+    logout() {
+      window.localStorage.removeItem('token');
+      window.localStorage.removeItem('id');
+      window.localStorage.removeItem('name');
+      window.localStorage.removeItem('email');
+      this.$emit('logged-out', {
+        isLoggedIn: false,
+        userEmail: '',
+        userName: '',
+      });
     },
     register() {
       console.log({
         email: this.email,
         password: this.password,
-        state: 'register'
+        state: 'register',
       });
+      axios.post(`${url}/register`, {
+        email: this.email,
+        password: this.password,
+      })
+        .then(({data}) => {
+          this.email = '';
+          this.password = '';
+          $('#modalLogin').modal('hide');
+          this.$emit('registered', data);
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     cartList() {
       // console.log(1)
     },
   },
+  created() {
+  }
 };
 </script>
 

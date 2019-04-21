@@ -1,11 +1,18 @@
 const mongoose = require('mongoose')
-const { hash } = require('../helpers/bcryptjs')
-const { compare } = require('../helpers/bcryptjs')
 
 let userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String,
+  name: {
+    type: String,
+    required: [true, `Name required`],
+  },
+  email: {
+    type: String,
+    required: [true, 'Email required'],
+  },
+  password: {
+    type: String,
+    required: [true, 'Password required'],
+  },
   role: String,
   carts: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -13,14 +20,18 @@ let userSchema = new mongoose.Schema({
   }]
 })
 
-// userSchema.pre('save', function (next) {
-//   let temp = hash(this.password, 10)
-//   if(compare(this.password, temp)) {
-//     this.password = hash(this.password, 10)
-//   }
-//   next()
-// })
-
 let User = mongoose.model('User', userSchema)
+
+User.schema.path('email').validate(function (input) {
+  User.findOne({email: input})
+    .then(found => {
+      if(found) {
+        return false
+      } else {
+        return true
+      }
+    })
+    .catch(err => {console.log(err)})
+}, 'Email has been used.')
 
 module.exports = User

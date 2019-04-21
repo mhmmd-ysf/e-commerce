@@ -7,7 +7,6 @@ const app = require('../app')
 use(chaiHTTP)
 
 describe('Item routes (success):', function () {
-  //? ================================ GET users done ================================
   it('GET /users => Should return an array of user objects.', function (done) {
     chai
       .request(app)
@@ -26,7 +25,6 @@ describe('Item routes (success):', function () {
         done()
       })
   })
-  //? ================================ GET users 1 done ================================
   it('GET /users/:id => Should return an object of user', function (done) {
     chai
       .request(app)
@@ -42,7 +40,6 @@ describe('Item routes (success):', function () {
         done()
       })
   })
-  //? ================================ POST users done ================================
   it('POST /users => Should return an object of created user', function (done) {
     let user = {
       name: 'Muhammad Yusuf',
@@ -62,7 +59,6 @@ describe('Item routes (success):', function () {
         done()
       })
   })
-  //? ================================ PUT users done ================================
   it('PUT /users/:id => Should return an object of updated user', function (done) {
     let user2 = {
       name: 'Muhammad Yusuf2',
@@ -82,7 +78,6 @@ describe('Item routes (success):', function () {
         done()
       })
   })
-  //? ================================ DELETE users done ================================
   it('DELETE /users/:id => should remove a user and return status code 204', function (done) {
     chai
       .request(app)
@@ -98,7 +93,6 @@ describe('Item routes (success):', function () {
 })
 
 describe('Item routes (success):', function () {
-  //? ================================ GET items done ================================
   it('GET /items => Should return an array of item objects.', function (done) {
     chai
       .request(app)
@@ -120,7 +114,6 @@ describe('Item routes (success):', function () {
         done()
       })
   })
-  //? ================================ GET items 1 done ================================
   it('GET /items/:id => Should return an object of item', function (done) {
     chai
       .request(app)
@@ -140,7 +133,6 @@ describe('Item routes (success):', function () {
         done()
       })
   })
-  //? ================================ POST items done ================================
   it('POST /items => Should return an object of created item', function (done) {
     let newItem = {
       name: 'input.name112',
@@ -172,8 +164,7 @@ describe('Item routes (success):', function () {
         done()
       })
   })
-  //? ================================ PUT items done ================================
-  it.only('PUT /items/:id => Should return an object of updated item', function (done) {
+  it('PUT /items/:id => Should return an object of updated item', function (done) {
     let newItem2 = {
       name: 'input.name3',
       // tags: 'input.tags3',
@@ -211,6 +202,139 @@ describe('Item routes (success):', function () {
         input.should.be.a('object')
         input.should.have.property('message')
         input.should.have.property('id')
+        done()
+      })
+  })
+})
+
+// ? untuk test cart, chai baru bisa jalan ketika user.save() dijalankan tanpa return, namun di client-side baru bisa berfungsi ketika menggunakan return
+describe.only('Cart routes (success):', function () {
+  it('PUT /addToCart => Should return an array of user\'s item objects.', function (done) {
+    chai
+      .request(app)
+      .put('/addToCart')
+      .set('id_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYmI2MWRiZGM1MDE3Njk4Y2ZkNTY1YiIsImVtYWlsIjoidWN1cEBtYWlsLmNvbSIsIm5hbWUiOiJNdWhhbW1hZCBZdXN1ZiIsImlhdCI6MTU1NTg2NjIyOSwiZXhwIjoxNTU1ODczNDI5fQ.uzHKEN0HyxjojWmtM13tmURaeZU5Iub8vx6esDB61O0')
+      .send({itemId: '5cba82e0802a2e47a8b6cb65'})
+      .end((err, res) => {
+        let result = res.body
+        // console.log('res=====================================')
+        // console.log(result)
+        // console.log('res=====================================')
+        result.should.be.a('array')
+        done()
+        // result.forEach(item => {
+        //   item.should.have.property('name')
+        //   item.should.have.property('price')
+        //   item.should.have.property('description')
+        //   item.should.have.property('featuredImg')
+        //   item.should.have.property('tags')
+        //   item.should.have.property('stock')
+        // })
+      })
+  })
+  it('PUT /removeFromCart => Should return an array of user\'s item objects.', function (done) {
+    chai
+      .request(app)
+      .put('/removeFromCart')
+      .set('id_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYmI2MWRiZGM1MDE3Njk4Y2ZkNTY1YiIsImVtYWlsIjoidWN1cEBtYWlsLmNvbSIsIm5hbWUiOiJNdWhhbW1hZCBZdXN1ZiIsImlhdCI6MTU1NTg2NjIyOSwiZXhwIjoxNTU1ODczNDI5fQ.uzHKEN0HyxjojWmtM13tmURaeZU5Iub8vx6esDB61O0')
+      .send({itemId: '5cba82e0802a2e47a8b6cb65'})
+      .end((err, res) => {
+        let result = res.body
+        // console.log('res=====================================')
+        // console.log(result)
+        // console.log('res=====================================')
+        result.should.be.a('array')
+        done()
+        // result.forEach(item => {
+        //   item.should.have.property('name')
+        //   item.should.have.property('price')
+        //   item.should.have.property('description')
+        //   item.should.have.property('featuredImg')
+        //   item.should.have.property('tags')
+        //   item.should.have.property('stock')
+        // })
+      })
+  })
+  it('PUT /removeAll => Should return an array of user\'s item objects.', function (done) {
+    chai
+      .request(app)
+      .put('/removeAll')
+      .set('id_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYmI2MWRiZGM1MDE3Njk4Y2ZkNTY1YiIsImVtYWlsIjoidWN1cEBtYWlsLmNvbSIsIm5hbWUiOiJNdWhhbW1hZCBZdXN1ZiIsImlhdCI6MTU1NTg2NjIyOSwiZXhwIjoxNTU1ODczNDI5fQ.uzHKEN0HyxjojWmtM13tmURaeZU5Iub8vx6esDB61O0')
+      .send({itemId: '5cba82e0802a2e47a8b6cb65'})
+      .end((err, res) => {
+        let result = res.body
+        // console.log('res=====================================')
+        // console.log(result)
+        // console.log('res=====================================')
+        result.should.be.a('array')
+        done()
+        // result.forEach(item => {
+        //   item.should.have.property('name')
+        //   item.should.have.property('price')
+        //   item.should.have.property('description')
+        //   item.should.have.property('featuredImg')
+        //   item.should.have.property('tags')
+        //   item.should.have.property('stock')
+        // })
+      })
+  })
+})
+
+describe('User routes (Error):', function () {
+  it(`POST /register => Case: Missing attribute 'name'`, function (done) {
+    let newUser = {
+      email: 'tes@mail.com',
+      password: '12345'
+    }
+    chai
+      .request(app)
+      .post('/register')
+      .send(newUser)
+      .end((err, res) => {
+        let result = res.body
+        // console.log('res=====================================')
+        // console.log(result)
+        // console.log('res=====================================')
+        result.should.be.a('object')
+        result.should.have.property('message')
+        done()
+      })
+  })
+  it(`POST /register => Case: Missing attribute 'email'`, function (done) {
+    let newUser = {
+      name: 'pucu',
+      password: '12345'
+    }
+    chai
+      .request(app)
+      .post('/register')
+      .send(newUser)
+      .end((err, res) => {
+        let result = res.body
+        // console.log('res=====================================')
+        // console.log(result)
+        // console.log('res=====================================')
+        result.should.be.a('object')
+        result.should.have.property('message')
+        done()
+      })
+  })
+  it(`POST /register => Case: Missing attribute 'password'`, function (done) {
+    let newUser = {
+      name: 'pucu',
+      email: 'ucup@maul.com'
+    }
+    chai
+      .request(app)
+      .post('/register')
+      .send(newUser)
+      .end((err, res) => {
+        let result = res.body
+        // console.log('res=====================================')
+        // console.log(result)
+        // console.log('res=====================================')
+        result.should.be.a('object')
+        result.should.have.property('message')
         done()
       })
   })

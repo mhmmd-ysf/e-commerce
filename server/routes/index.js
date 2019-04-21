@@ -2,6 +2,7 @@ const route = require('express').Router()
 const ControllerUser = require('../controllers/user')
 const ControllerItem = require('../controllers/item')
 const authenticate = require('../middlewares/authenticate')
+const images = require('../helpers/images')
 
 route.get('/', (req, res) => {res.status(200).json({message: 'Home'})})
 route.post('/login', ControllerUser.login)
@@ -21,6 +22,14 @@ route.get('/items', ControllerItem.findAll)
 route.get('/items/:id', ControllerItem.findOne)
 route.put('/items/:id', ControllerItem.update)
 route.delete('/items/:id', ControllerItem.delete)
+
+route.post('/upload', images.multer.single('image'), images.sendUploadToGCS, (req, res) => {
+    res.send({
+      status: 200,
+      message: 'Your file is successfully uploaded',
+      link: req.file.cloudStoragePublicUrl
+    })
+  })
 
 route.use('/*', (req, res) => res.status(404).json({error: 'Not Found :('}))
 

@@ -7,6 +7,9 @@ const {sign} = require('../helpers/jwt')
 class ControllerUser {
   static create(req, res) {
     let input = req.body
+    if(!input.password) {
+      res.status(401).json({message: 'Password required.'})
+    }
     let newUser = {
       name: input.name,
       email: input.email,
@@ -17,7 +20,9 @@ class ControllerUser {
       .then(data => {
         res.status(201).json({ data })
       })
-      .catch(err => res.status(500).json({ message: err.message }))
+      .catch(err => {
+        res.status(500).json({ message: err.message })
+      })
   }
   static findAll(req, res) {
     User.find()
@@ -88,16 +93,21 @@ class ControllerUser {
     // console.log({body: req.body, params: req.params, authenticated: req.authenticated})
     User.findOne({_id: req.authenticated.id})
       .then(user => {
+        // console.log({masuk: 'then1'})
+        // console.log({user})
         user.carts.push(req.body.itemId)
         return user.save()
+        // return user.save()
       })
       .then(user => {
+        // console.log({masuk: 'then2'})
         return User.findOne({_id: req.authenticated.id}).populate('carts')
       })
       .then(user => {
+        // console.log({masuk: 'then3'})
         res.status(200).json(user.carts)
       })
-      .catch(err => {res.status(500).json({err: err.message})})
+      .catch(err => {/* console.log({masuk: 'then3'}); */ res.status(500).json({err: err.message})})
   }
   static removeFromCart(req, res) {
     console.log({body: req.body, params: req.params, authenticated: req.authenticated})
